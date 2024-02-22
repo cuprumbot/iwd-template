@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="assets/img/favicon/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/img/favicon/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/img/favicon/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/img/favicon/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="assets/img/favicon/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="assets/img/favicon/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="assets/img/favicon/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="assets/img/favicon/apple-touch-icon-152x152.png" />
+    <link rel="icon" type="image/png" href="assets/img/favicon/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="assets/img/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="assets/img/favicon/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="assets/img/favicon/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="assets/img/favicon/favicon-128.png" sizes="128x128" />
+    <meta name="application-name" content="&nbsp;"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="mstile-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+
+    <!-- Imports -->
+    <link rel="stylesheet" href="assets/css/main.min.css">
+    <script src="assets/js/jquery.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <script src="assets/js/speakers.js" type="text/javascript"></script>
+    <script src="assets/js/conferences.js" type="text/javascript"></script>
+    <script src="assets/js/subjects.js" type="text/javascript"></script>
+    <script src="assets/js/data.js" type="text/javascript"></script>
+
+    <script type="text/javascript" src="ghspa.js"></script>
+   
+    <title>IWD 2024</title>
+
+    <script>
+        (function($) {
+            if(!window.location.hash) {
+                /*
+                    FIND ME
+                    Use this in case you need the main domain to redirect to some page
+                    i.e. iwdgt.com will redirect
+                    only iwdgt.com/something will allow to reach the page
+                */
+
+                //window.location.replace("https://www.galileo.edu/page/international-women-day-women-techmakers/");
+            }
+        })(jQuery);
+    </script>
+</head>
+
+<body font-family="Product">
+    <div class="loader">
+        <div class="loader-outter"></div>
+        <div class="loader-inner"></div>
+    </div>
+    
+    <span id="background" class="background">
+    </span>
+    
+    <span class="title-container">
+        <span class="inner-container">
+            <span id="title-container" class="title-container no-select">
+                <span class="title">
+                    <div class="logo-loader">
+                        <div class="logo-loader-outter"></div>
+                        <div class="logo-loader-inner"></div>
+                    </div>
+                    <!-- <img id="innovation-logo" class="innovation-logo" src="" alt=""> -->
+                </span>
+
+                <span class="title-menu">
+                    <a id="staff-access" class="btn-menu button-other">Conferencistas</a>
+                    <a id="agenda-access" class="btn-menu button-other">Agenda</a>
+                    <a id="home-access" class="btn-menu button-primary">Más información</a>
+                    <a id="conduct-access" class="btn-menu button-primary">Código de Conducta</a>
+                    <!-- <a id="register-access" class="btn-menu button-secondary">Registro</a> -->
+                </span>
+            </span>
+        </span>
+    </span>
+
+    <span id="dynamic-information" class="dynamic-information">
+        <!-- <span class="section-title"></span> -->
+        <span class="section-body"> 
+        </span>
+    </span>
+    
+    <span id="dynamic-expanded-information" class="dynamic-expanded-information">
+        <span class="section-body">
+        </span>
+    </span>
+
+    <span id="galileo-logo" class="galileo-logo">      
+    </span>
+    
+    <span id="back-container" class="back-container">
+        <a id="back" class="btn-back"><i class="fas fa-arrow-left"></i></a>
+    </span>
+</body>
+</html>
+
+<script>
+    function titleCase(str) {return str.charAt(0).toUpperCase() + str.slice(1)};
+
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Agu', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var inIndex = true;
+    var isCarouselOn = false;
+    var inExpanded = false;
+    var orderSpeakers = new Array();
+
+    var WIDTH_RESIZE = 765;
+    var TABLET_SIZE = 768;
+
+    /*
+        FIND ME
+        Change logos
+    */
+    //var logos = ['assets/img/logo-galileo.png', 'assets/img/logo-wtm.jpg', 'assets/img/logo-innovation-lab.png', 'assets/img/logo-gdg-guatemala.png', 'assets/img/logo-gdg-cloud.png'];
+    var logos = ['assets/img/logo-galileo.png', 'assets/img/logo-wtm.jpg', 'assets/img/logo-innovation-lab.png', 'assets/img/logo-gdg-guatemala.png', 'assets/img/logo-gdg-cloud.png'];
+
+    function generateHome(){
+        var element = $('#dynamic-information');
+
+        var html = '';
+
+        /*
+            FIND ME
+            Modify event info, date and location on data.js
+        */
+        
+        html += '<span class="subtitle">Información</span>';
+        html += '<span class="text-big"><p>';
+        info.forEach((i) => { html += `${i}<br>`; });
+        html += '</p></span>';
+
+        html += '<span class="subtitle">Fecha</span>';
+        html += '<p>';
+        days.forEach((d) => {
+            html += '<b><font size="3">';
+            html += `${titleCase(d.day)}, ${d.date} de ${d.month} de ${d.year}<br>`;
+            html += `${d.audience}<br>`;
+            html += '</font></b>';
+
+            html += `Evento ${d.inPerson}<br>`;
+            html += `${d.startTime} a ${d.endTime}<br>`;
+            html += `${d.location}<br>`;
+            html += `${d.address}<br>`;
+
+            html += '<br>';
+        });
+        html += '</p>';
+        
+        element.find('.section-body').html(html);
+        
+        element.css('opacity', '1');
+        element.css('transform', 'translateY(0)');
+        element.css('z-index', '1');
+    }
+
+    function generateConduct(){
+        var element = $('#dynamic-information');
+
+        /*
+            FIND ME
+            Hardcoded, not likely to change
+        */
+
+        var html = '';
+
+        html += '<span class="subtitle">';
+        html += 'Código de Conducta';
+        html += '</span>';
+
+        html += '<p>';
+        html += 'Requerimos que todos los asistentes, ponentes, patrocinadores y voluntarios de nuestra conferencia estén de acuerdo con el siguiente código de conducta. La organización se encargará de que se cumpla durante el evento. Esperamos la colaboración de todos los participantes para ayudar a construir un entorno seguro para todo el mundo.';
+        html += '</p>';
+
+        html += '<span class="subtitle">';
+        html += 'La versión rápida';
+        html += '</span>';
+
+        html += '<p>';
+        html += 'Queremos que esta conferencia sea una experiencia libre de acoso para todo el mundo sin importar su género, su identidad o expresión de género, edad, orientación sexual, discapacidad, aspecto físico, raza o religión.<br><br>';
+        html += 'No toleraremos el acoso de ningún tipo a ningún participante. El lenguaje o las imágenes sexuales no son apropiadas para el evento, incluyendo las charlas, redes sociales y cualquier otro medio de comunicación. Los participantes que violen estas reglas podrán ser sancionados o expulsados de la conferencia a discreción de los organizadores.<br><br>'   
+        html += '</p>';
+
+        html += '<span class="subtitle">';
+        html += 'La versión no tan rápida';
+        html += '</span>';
+
+        html += '<p>';
+        html += 'Incluimos como acoso:';
+        html += '<ul>';
+        html += '<li>Los comentarios expresados (de manera escrita o verbal) ofensivos relacionados con el género, la identidad o expresión de género, edad, orientación sexual, discapacidad, apariencia física, raza, religión;</li>';
+        html += '<li>Imágenes sexuales en espacios públicos;</li>';
+        html += '<li>Intimidación deliberada;</li>';
+        html += '<li>Acecho o persecución;</li>';
+        html += '<li>El acoso con fotografías o vídeos;</li>';
+        html += '<li>La interrupción sostenida de charlas u otros eventos;</li>';
+        html += '<li>La atención sexual no deseada.</li>';
+        html += '</ul>';
+        html += '</p>';
+
+        html += '<p>';
+        html += 'Los patrocinadores también se encuentran sujetos a esta política.<br><br>';
+        html += 'En concreto, los patrocinadores no deben usar imágenes, actividades u otro material sexualizado. El personal (incluyendo los voluntarios) no debe utilizar ropa/uniformes/disfraces sexualizados, o crear de ninguna otra forma un entorno sexualizado. Si un participante tiene un comportamiento de acoso, los organizadores de la conferencia podrán tomar cualquier acción que consideren apropiada, incluyendo advertir al infractor o su expulsión de la conferencia. Si estás siendo acosado, sabes de alguien que lo está siendo o tienes alguna otra preocupación, por favor contacta con algún miembro de la organización inmediatamente. Los miembros de la organización estarán listos y dispuestos para ayudar a los participantes en esta situación o asistir de otra manera para ayudar a quienes están siendo acosados a sentirse seguros durante la conferencia. Valoramos tu participación. Esperamos que los participantes sigan estas reglas durante la conferencia.';
+        html += '</p>';
+        
+        element.find('.section-body').html(html);
+        
+        element.css('opacity', '1');
+        element.css('transform', 'translateY(0)');
+        element.css('z-index', '1');
+    }
+
+    function generateAgenda(chosenDay){
+        var actualDay = 1;
+        var separationCount = 0;
+        var night = false;
+        var element = $('#dynamic-information');
+
+        var html = "";
+        
+        html += '<span class="agenda-container">';
+        days.forEach((d) => {
+            html += '<span class="subtitle">';
+            html += `${titleCase(d.day)}, ${d.date} de ${d.month} de ${d.year}`;
+            html += '</span>';
+
+            html += `<p>${d.startTime} a ${d.endTime} - ${d.audience}<br>`;
+            html += `${d.room}</p>`;
+        });
+        html += '<span class="events-container">';
+
+        var oldDay = '0';
+        var oldHour = 25;
+        var oldMinutes = '61';
+        
+        console.log("chosen date: " + chosenDay);
+        html += '<span class="day-selection">';  
+            
+            if (chosenDay == comps.viernes) {
+                html += '<span n="1" class="day-selector selected">';
+                console.log("VIERNES selected");
+            } else {
+                html += '<span n="1" class="day-selector">';
+            }
+            html += `Viernes ${comps.viernes}`
+            html += '</span>';
+
+            if (chosenDay == comps.sabado) {
+                html += '<span n="2" class="day-selector selected">';
+                console.log("SABADO selected");
+            } else {
+                html += '<span n="2" class="day-selector">';
+            }
+            html += `Sábado ${comps.sabado}`;
+            html += '</span>';
+
+        html += '</span>';
+
+        html += '<span class="time-selection">';
+            html += '<span n="1" class="time-selector selected">';
+            html += '<i style="font-size: 20px;" class="far fa-sun"></i>Matutina'
+            html += '</span>';
+
+            /*  
+                FIND ME
+                Enable if there is afternoon or night 
+            */
+            html += '<span n="2" class="time-selector">';
+            html += '<i style="font-size: 20px;" class="far fa-moon"></i>Vespertina'
+            html += '</span>';
+        html += '</span>';
+        
+        conferences.forEach((conf)=>{
+            if(conferences.tba != '1'){
+                var hour = parseInt(conf.time.substring(0, 2));
+                if(hour >= 12){
+                    ap = 'PM';
+                    
+                    /*
+                        FIND ME
+                        Time limit between morning and afternoon/night
+                    */
+                    if(hour >= 14){
+                        night = true;
+                    }else{
+                        night = false;
+                    }
+                    
+                    hour = (hour > 12)? hour - 12 : hour;
+                }else{
+                    ap = 'AM';
+                    night = false;
+                }
+                var strHour = (hour < 10) ? `0${hour}` : `${hour}`;
+                var strMinutes = conf.time.substring(3, 5);
+                var strTime = `${strHour}:${strMinutes}`;
+
+                if(oldMinutes == strMinutes && oldHour == hour){
+                    strHour = '';
+                    strMinutes = '';
+                    strTime = '';
+                    ap = '';
+                }else{
+                    oldHour = hour;
+                    oldMinutes = strMinutes;
+                }
+
+                /*
+                if(oldDay != event.day){
+                    if(separationCount > 0) html += '</span>';
+                    separationCount++;
+                    html += (separationCount == 1)? `<span n="${separationCount}" class="day-card shown">` : `<span n="${separationCount}" class="day-card">`;
+                    html += '<span class="event-date">';
+                    if(event.day == 24) html += 'Viernes, 24 de marzo';
+                    else if(event.day == 25) html += 'Sábado, 25 de marzo';
+                    html += '</span>';
+                    oldDay = event.day;
+                }
+                */
+
+                if(oldDay != conf.day){
+                    if(separationCount > 0) html += '</span>';
+                    separationCount++;
+                    html += (conf.day == chosenDay)? `<span n="${separationCount}" class="day-card shown">` : `<span n="${separationCount}" class="day-card">`;
+                    html += '<span class="event-date">';
+                    if(conf.day == comps.viernes) html += `Viernes, ${comps.viernes} de ${comps.mes}`;
+                    else if(conf.day == comps.sabado) html += `Sábado, ${comps.sabado} de ${comps.mes}`;
+                    html += '</span>';
+                    oldDay = conf.day;
+                }
+
+                html += (night) ? '<span class="event-card night">' : '<span class="event-card shown">';
+                html += (night) ? '<span class="event-time night">' : '<span class="event-time">';
+                html += `<span class="time">${strTime}</span>`;
+                html += `<span class="m">${ap}</span>`;
+                html += '</span>';
+
+                html += '<span class="event-information">';
+                html += '<span class class="date"></span>';
+                html += `<span class="event-title">${conf.name}</span>`;
+                html += '<span class="subjects-container">';
+                html += `<span class="event-ubication"><i class="fas fa-map-marker"></i>${conf.place}</span>`;
+                conf.subjects.forEach((subject)=>{
+                    html += '<span class="event-subject">';
+                    html += (subjects[subject] == null)?  '<i style="color: gray;" class="fas fa-circle"></i>' : `<i style="color: #${subjects[subject]};" class="fas fa-circle"></i>`;
+                    html += subject;
+                    html += '</span>';
+                });
+                html += '</span>';
+
+                if(conf.description != 'TBA' && conf.description != '' && conf.description != null){
+                    html += '<span class="event-description">';
+                    html += conf.description;
+                    html += '</span>';
+                }
+
+                if (typeof(conf.speaker) == "string") {
+                    var speaker;                
+                    var finded = false;
+                    for(var i = 0; i < speakers.length; i++){
+                        speaker = speakers[i];
+                        if(speaker.name == conf.speaker){
+                            finded = true;
+                            break;
+                        }
+                    }
+
+                    if(finded){
+                        html += '<span class="event-speaker">';
+                        html += '<span class="staff-image">';
+                        html += (speaker.image == null)? '' : `<img class="img" img-path="assets/img/conf/${speaker.image}" src="assets/img/conf/${speaker.image}">`;
+                        html += '</span>';
+                        html += '<span class="staff-name">';
+
+                        if (speaker.nationality != "empty" && speaker.nationality != "") {
+                            html += `<span class="staff-flag"><img src="assets/img/paises/${speaker.nationality}.png"></span>`;
+                        }
+
+                        html += conf.speaker;
+                        html += '</span>';
+                        html += '</span>';
+                    } else if (conf.speaker != '') {
+                        html += '<span class="event-speaker">';
+                        html += '<span class="staff-image">';
+                        html += '<img class="img" img-path="assets/img/conf/default.png" src="assets/img/conf/default.png">';
+                        html += '</span>';
+                        html += '<span class="staff-name">';
+                        html += conf.speaker;
+                        html += '</span>';
+                        html += '</span>';
+                    }
+                } else {
+                    
+                    /* multiples conferencistas en un evento */
+                    conf.speaker.forEach((speakerName) => {
+                        for (var i = 0; i < speakers.length; i++) {
+                            speaker = speakers[i];
+                            if (speaker.name == speakerName) {
+
+                                html += '<span class="event-speaker">';
+                                html += '<span class="staff-image">';
+                                html += (speaker.image == null)? '' : `<img class="img" img-path="assets/img/conf/${speaker.image}" src="assets/img/conf/${speaker.image}">`;
+                                html += '</span>';
+                                html += '<span class="staff-name">';
+
+                                if (speaker.nationality != "empty" && speaker.nationality != "") {
+                                    html += `<span class="staff-flag"><img src="assets/img/paises/${speaker.nationality}.png"></span>`;
+                                }
+
+                                html += speaker.name;
+                                html += '</span>';
+                                html += '</span>';
+
+                                break;
+                            }
+                        }
+                    });
+                }
+
+                html += '</span>';
+                html += '</span>';
+            }
+        });
+
+        html += '</span>';
+        html += '</span>';
+        html += '</span>';
+
+        element.find('.section-body').html(html);
+
+        element.css('opacity', '1');
+        element.css('transform', 'translateY(0)');
+        element.css('z-index', '1');
+
+        $('.day-selector').click((event)=>{
+            element = $(event.currentTarget);
+            if(!element.hasClass('selected')){
+                var index = element.attr('n');
+                $('.day-selector').each((i, selector)=>{
+                    if(selector.classList.contains('selected')) selector.classList.remove('selected');
+                    if(selector.getAttribute('n') == index){
+                        selector.classList.add('selected');
+                    }
+                });
+                $('.day-card').each((i, card)=>{
+                    if(card.classList.contains('shown')) card.classList.remove('shown');
+                    if(card.getAttribute('n') == index){
+                        card.classList.add('shown');
+                    }
+                });
+            }
+        });
+
+        $('.time-selector').click((event)=>{
+            element = $(event.currentTarget);
+            if(!element.hasClass('selected')){
+                var index = element.attr('n');
+                $('.time-selector').each((i, selector)=>{
+                    if(selector.classList.contains('selected')) selector.classList.remove('selected');
+                    if(selector.getAttribute('n') == index){
+                        selector.classList.add('selected');
+                    }
+                });
+                $('.day-card').each((i, card)=>{
+                    $(card).find('.event-card').each((j, event)=>{
+                        if(index == 1){
+                            if(!event.classList.contains('night')) event.classList.add('shown');
+                            else event.classList.remove('shown');
+                        }else if(index == 2){
+                            if(event.classList.contains('night')) event.classList.add('shown');
+                            else event.classList.remove('shown');
+                        }
+                    });
+                });
+            }
+        });
+
+        if(defaults.day == comps.viernes) $('.day-selector').each((index, selector)=>{
+            if(selector.getAttribute('n') == 1) selector.click();
+        });
+        if(defaults.day == comps.sabado) $('.day-selector').each((index, selector)=>{
+            if(selector.getAttribute('n') == 2) selector.click();
+        });
+        if(defaults.time == 'day') $('.time-selector').each((index, selector)=>{
+            if(selector.getAttribute('n') == 1) selector.click();
+        });
+        if(defaults.time == 'night') $('.time-selector').each((index, selector)=>{
+            if(selector.getAttribute('n') == 2) selector.click();
+        });
+    }
+    
+    function generateRegister(){
+        var element = $('#dynamic-information');
+
+        var html = "";
+
+        /*
+            FIND ME
+            Add MailChimp (or similar service) HTML
+            Usually given by GES
+        */
+
+        element.find('.section-body').html(html);
+        element.css('opacity', '1');
+        element.css('transform', 'translateY(0)');
+        element.css('z-index', '1');
+    }
+
+
+    function generateExpandedSpeakers(img_path, name, gde){
+        inExpanded = true;
+
+        var findedSpeakers;
+        speakers.forEach((speaker)=>{
+            if(speaker.name == name){
+                findedSpeakers = speaker;
+            }
+        });
+
+        var element = $('#dynamic-expanded-information');
+        var html = '';
+
+        html += '<span class="staff-expanded-card">';
+        html += '<span class="staff-image">';
+        html += (img_path == undefined)? '' : `<img class="img" src="${img_path}">`;
+
+        if(gde[0] != undefined) html += '<span class="gde-banner"><span class="img-container"><img src="assets/img/gde.png"></span></span>';
+
+        html += '</span>';
+
+        html += '<span class="staff-name">';
+
+        if (findedSpeakers.nationality != "empty" && findedSpeakers.nationality != "") {
+            html += `<span class="staff-flag"><img src="assets/img/paises/${findedSpeakers.nationality}.png"></span>`;
+        }
+
+        html += name;
+        html += '</span>';
+        //html += `<span class="staff-company">${findedSpeakers.company}</span>`;
+        html += `<span class="staff-information">${findedSpeakers.information}</span>`;
+
+        html += '<span class="events-container">';
+
+        var oldDay = '0';
+        conferences.forEach((conf)=>{
+            if(conf.speaker == name || (typeof(conf.speaker) == "object" && conf.speaker.includes(name))){
+
+                var hour = parseInt(conf.time.substring(0, 2));
+                var ap = (hour >= 12)? 'PM' : 'AM';
+                hour = (hour > 12)? hour - 12 : hour;
+                var strHour = (hour < 10)? `0${hour}` : `${hour}`;
+                var strMinutes = conf.time.substring(3, 5);
+
+                if(oldDay != conf.day){
+                    html += '<span class="event-date">';
+                    if(conf.day == 24) html += 'Viernes, 24 de marzo';
+                    else if(conf.day == 25) html += 'Sábado, 25 de marzo';
+                    html += '</span>';
+                    oldDay = conf.day;
+                }
+
+                html += '<span class="event-card shown">';
+
+                html += '<span class="event-time">';
+                html += '<span class="time">';
+                html += `${strHour}:${strMinutes}`;
+                html += '</span>';
+                html += '<span class="m">';
+                html += ap;
+                html += '</span>';
+                html += '</span>';
+
+                html += '<span class="event-information">';
+                html += '<span class class="date">';
+                html += '</span>';
+                html += '<span class="event-title">';
+                html += conf.name;
+                html += '</span>';
+                html += '<span class="subjects-container">';
+                html += '<span class="event-ubication"><i class="fas fa-map-marker"></i>';
+                html += conf.place;
+                html += '</span>';
+                conf.subjects.forEach((subject)=>{
+                    html += '<span class="event-subject"><i class="fas fa-circle"></i>';
+                    html += subject;
+                    html += '</span>';
+                });
+
+                html += '</span>';
+
+                if(conf.description != 'TBA' && conf.description != '' && conf.description != null){
+                    html += '<span class="event-description">';
+                    html += conf.description;
+                    html += '</span>';
+                }
+
+                
+                html += '</span>';
+
+                html += '</span>';
+            }
+        });
+
+        html += '<div class="vertical-spacer"></div>';
+
+        html += '</span>';
+        html += '</span>';
+        html += '</span>';
+
+        element.find('.section-body').html(html);
+
+        setTimeout(()=>{
+            $('#dynamic-information').css('display', 'none');
+        }, 300);
+        $('#dynamic-expanded-information').css('width', '100vw');
+        $('#dynamic-expanded-information').css('height', '100vh');
+        $('#dynamic-expanded-information').css('opacity', '1');
+    }
+
+    function hideExpanded(){
+        inExpanded = false;
+        $('#dynamic-information').css('display', 'flex');
+        setTimeout(()=>{
+            $('#dynamic-expanded-information').find('.section-body').html('');
+            $('#dynamic-expanded-information').css('height', 'auto');
+        }, 300);
+        $('#dynamic-expanded-information').css('opacity', '0');
+        
+    }
+
+    function getSecondName(name){
+        return name.split(" ")[0];
+    }
+
+    function generateSpeakers(){
+        console.log("generating speakers");
+        var element = $('#dynamic-information');
+        var html = '';
+
+        html += '<span class="staff-container">';
+        html += '<p class="helper">Click sobre la imagen para conocer más sobre la conferencista y su tema</p>'
+        
+        orderSpeakers.forEach(element => {
+            html += `<span class="staff-card ${element.job}">`;
+            html += '<span class="staff-image">';
+            html += (element.image == null)? '' : `<img class="img" img-path="assets/img/conf/${element.image}" src="">`;
+            if(element.gde != null){
+                html += '<span class="gde-banner"><span class="img-container"><img src="assets/img/gde.png"></span></span>';
+            }
+            html += '<span class="staff-job">';
+            html += 'Ver más';
+            html += '</span>';
+            html += '</span>';
+            html += '<span class="staff-name">';
+
+            if (element.nationality != "empty" && element.nationality != "") {
+                html += `<span class="staff-flag"><img src="assets/img/paises/${element.nationality}.png"></span>`;
+            }
+            
+            html += element.name;
+            html += '</span>';
+            //html += '<span class="staff-company">';
+            //html += element.company;
+            //html += '</span>';
+            html += '<span class="staff-information">';
+            html += '<p>';
+            html += element.short;
+            html += '</p>';
+            html += '</span>';
+            html += '</span>';
+        });
+        html += '</span>';
+
+        element.find('.section-body').html(html);
+
+        element.find('.section-body').find('.staff-container').find('.staff-card').each((index, element) => {
+            var actualImg = $(element).find('.staff-image');
+
+            if(actualImg.find('.img')[0] != undefined) actualImg.find('.img')[0].onload = () => {
+                actualImg.css('opacity', '1');
+                actualImg.css('transform', 'scale(1)');
+            }
+
+            actualImg.find('.img').attr('src', actualImg.find('.img').attr('img-path'));
+        });
+
+        element.css('opacity', '1');
+        element.css('transform', 'translateY(0)');
+        element.css('z-index', '1');
+
+        $('.staff-image').click((event)=>{
+            element = $(event.currentTarget);
+            var image_path = element.find('.img').attr('src');
+            var name = element.parent().find('.staff-name').text();
+            var gde = element.find('.gde-banner');
+            generateExpandedSpeakers(image_path, name, gde);
+        });
+        console.log("speakers were generated");
+    }
+
+    function hideIndex(){
+        inIndex = false;
+        $('#copyright').css('bottom', '-23px');
+        $('#galileo-logo').css('bottom', '-140px');
+        $('#title-container').css('opacity', '0');
+        $('#title-container').css('transform', 'translateY(20px)');
+        $('#background').css('opacity', '0');
+        $('#back-container').find('.btn-back').css('transform', 'translateX(0)');
+        $('body').css('overflow-y', 'auto');
+        $('#title-container').css('z-index', '-1');
+
+        window.scroll({
+            top: 0, 
+            left: 0, 
+            behavior: 'smooth'
+        });
+    }
+
+    function showIndex(){
+        $('#copyright').css('bottom', '130px');
+        $('#galileo-logo').css('bottom', '0');
+        var element = $('#title-container');
+        element.css('opacity', '1');
+        element.css('transform', 'translateY(0)');
+        $('#background').css('opacity', '1');
+                console.log("hiding back button");
+        $('#back-container').find('.btn-back').css('transform', 'translateX(-85px)');
+        element = $('#dynamic-information');
+        element.css('opacity', '0');
+        element.css('transform', 'translateY(-40px)');
+        element.css('z-index', 0);
+        element.css('padding', '15px 15px 70px 15px');
+        $('body').css('overflow-y', 'hidden');
+        $('#title-container').css('z-index', '1');
+        $('#background').removeClass('unfocused');
+        setTimeout(()=>{
+            element.find('.section-body').html('');
+        },400);
+        inIndex = true;
+        setTimeout(hideBackArrow(), 500);
+    }
+
+    function hideBackArrow() {
+        $('#back-container').find('.btn-back').css('transform', 'translateX(-85px)');
+    }
+
+    function populate() {
+        $('#innovation-logo').attr('src','assets/img/logo-2024.png');
+
+        if( ($(window).width() > TABLET_SIZE)){
+            
+            if ( $(window).height() > 620 ) {
+                var html = '';
+                
+                html += '<img src="" img-path="assets/img/logo-galileo.png" alt="Universidad Galileo">';
+                html += '<img src="" img-path="assets/img/logo-wtm.jpg" alt="Women Techmakers">';
+                html += '<img src="" img-path="assets/img/logo-innovation-lab.png" alt="Innovation Lab">';
+                html += '<img src="" img-path="assets/img/logo-gdg-guatemala.png" alt="GDG Guatemala">';
+                html += '<img src="" img-path="assets/img/logo-gdg-cloud.png" alt="GDG Cloud">';
+                
+                $("#galileo-logo").html(html);
+
+                $("#galileo-logo").find('img').each((index, element)=>{
+                    element.onload = () => { $(element).css('opacity', '1'); }
+
+                    $(element).attr('src', $(element).attr('img-path'));
+                });
+            } else {
+                $("#galileo-logo").html("");
+            }
+
+        } else {
+        
+            if ( $(window).height() > 430 ) {
+                var html = '';
+                html += '<span class="external-container">';
+                html += '<span class="left-logo">';
+                html += '<img src="">';
+                html += '</span>';
+                html += '<span class="center-logo">';
+                html += '<img src="">';
+                html += '</span>';
+                html += '<span class="right-logo">';
+                html += '<img src="">';
+                html += '</span>';
+                html += '</span>';
+
+                $("#galileo-logo").html(html);
+                activateCarousel();
+            } else {
+                $("#galileo-logo").html("");
+            }
+
+        }
+    }
+
+    function generatePlace(){
+        var element = $('#dynamic-information');
+        var html = '';
+        
+        html += '<center><h3>Viernes 24 de marzo - Universidad Galileo</h3></center>'
+        html += '<span class="map-container">';
+        html += '<iframe width="500" height="500" frameborder="0" src="https://maps.google.com/maps?q=universidad%20galileo&t=&z=17&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>';
+        html += '</span>';
+        html += '<center><h3>Sábado 24 de marzo - Universidad Galileo</h3></center>'
+        html += '<span class="map-container">';
+        html += '<iframe width="500" height="500" frameborder="0" src="https://maps.google.com/maps?q=universidad%20galileo&t=&z=17&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>';
+        html += '</span>';
+
+        element.find('.section-body').html(html);
+
+        element.css('opacity', '1');
+        element.css('transform', 'translateY(0)');
+        element.css('z-index', '1');
+    }
+
+    function activateCarousel(){
+        var index = 4;
+        var lim = logos.length;
+
+        var leftElement = $('#galileo-logo').find('.external-container').find('.left-logo').find('img');
+        leftElement[0].onload = () => {
+            leftElement.css('opacity', '1');
+        };
+        leftElement.attr('src', logos[3]);
+        var centerElement = $('#galileo-logo').find('.external-container').find('.center-logo').find('img');
+        centerElement[0].onload = () => {
+            centerElement.css('opacity', '1');
+        };
+        centerElement.attr('src', logos[2]);
+        var rightElement = $('#galileo-logo').find('.external-container').find('.right-logo').find('img');
+        rightElement[0].onload = () => {
+            rightElement.css('opacity', '1');
+        };
+        rightElement.attr('src', logos[1]);
+
+
+        if(!isCarouselOn){
+            isCarouselOn = true;
+            setInterval(()=>{
+            
+                if(inIndex){
+                    var xc = $('#galileo-logo').find('.external-container');
+                    var left = xc.find('.left-logo');
+                    var right = xc.find('.right-logo');
+                    var center = xc.find('.center-logo');
+
+                    right.find('img').attr('src', logos[index++%lim]);
+
+                    left.removeClass('left-logo');
+                    left.addClass('center-logo');
+
+                    center.removeClass('center-logo');
+                    center.addClass('right-logo');
+
+                    right.removeClass('right-logo');
+                    right.addClass('left-logo');
+
+                    left.css('transition', '3s ease');
+                    left.css('right', 0);
+                    left.css('left', 0);
+
+                    center.css('right', '-100%');
+                    center.css('left', '100%');
+
+                    right.css('transition', 'none');
+                    right.css('left', '-100%');
+                    right.css('right', '100%');
+                }
+            }, 3000);
+        } 
+    }
+
+    /* Draw again if size or orientation changes */
+    $(window).resize(()=>{
+        if(inIndex) { populate(); }
+    });
+    window.addEventListener("orientationchange", function() {
+        if(inIndex) { populate(); }
+    }, false);
+
+    (function($) {
+
+        var inserted = false;
+        speakers.forEach((element, index) => {
+            inserted = false;
+            if(orderSpeakers.length == 0){
+                orderSpeakers.unshift(element);
+            }else{
+                orderSpeakers.forEach((actualElement, actualIndex) => {
+                    var comp = getSecondName(element.name).localeCompare(getSecondName(actualElement.name), 'en', {sensitivity: 'base'});
+                    if((comp == -1 || comp == 0) && !inserted){
+                        orderSpeakers.splice(actualIndex, 0, element);
+                        inserted = true;
+                    }
+                });
+                if(!inserted){
+                    orderSpeakers.push(element);
+                }
+            }
+        });
+
+        if(window.location.hash) {
+            // Remove the # character
+            var hash = window.location.hash.substring(1); 
+            if(hash == 'registro' || hash == 'r'){
+                hideIndex();
+                generateRegister();
+            } else if (hash == 'agenda' || hash == 'a') {
+                chosenDay = comps.viernes;
+                hideIndex();
+                generateAgenda(comps.viernes);
+            } else if (hash == `agenda${comps.viernes}` || hash == `a${comps.viernes}`) {
+                chosenDay = comps.viernes;
+                hideIndex();
+                generateAgenda(comps.viernes);
+            } else if (hash == `agenda${comps.sabado}` || hash == `a${comps.sabado}`) {
+                chosenDay = comps.sabado;
+                hideIndex();
+                generateAgenda(comps.sabado);
+            } else if (hash == 'conferencistas' || hash == 'c') {
+                hideIndex();
+                generateSpeakers();
+            } else if (hash == 'conducta' || hash == 'cc') {
+                hideIndex();
+                generateConduct();
+            }
+        }
+
+        logoHtml = '<img id="innovation-logo" class="innovation-logo" src="" alt="">';
+        $('#title-container').find('.title').append(logoHtml);
+
+        $('#innovation-logo')[0].onload = ()=>{
+            if(inIndex) $('.title-container').css('opacity', '1');
+        };
+
+        $('.loader').delay(700).fadeOut('slow');
+        $('.logo-loader').delay(2500).fadeOut('slow');
+
+        $('.btn-menu').click((event)=>{
+            if(!$(event.currentTarget).hasClass('disabled')){
+                hideIndex();
+
+                var element = event.target;
+                switch(element.id){
+                    case 'home-access':{
+                        /*
+                            FIND ME
+                            Redirection or local
+                        */
+                        //window.location.href = "https://www.galileo.edu/page/international-women-day-women-techmakers/";
+                        generateHome();
+                    }break;
+                    case 'staff-access':{
+                        generateSpeakers();
+                    }break;
+                    case 'agenda-access':{
+                        /* 
+                            FIND ME
+                            After the first day of event ends, change the argument so the second days loads when entering the agenda
+                        */
+                        generateAgenda(defaults.day);
+                    }break;
+                    case 'place-access':{
+                        $('#dynamic-information').css('padding', '0');
+                        generatePlace();
+                    }break;
+                    case 'register-access':{
+                        /*
+                            FIND ME
+                            Redirection or local
+                        */
+                        window.location.href = "https://www.galileo.edu/page/international-women-day-women-techmakers-2023/";
+                        //generateRegister();
+                    }break;
+                    case 'conduct-access':{
+                        generateConduct();
+                    }
+                }
+            }
+        });
+
+        $('#back').click(()=>{
+            if(inExpanded) hideExpanded();
+            else showIndex();
+        });
+
+        populate();
+    })(jQuery); 
+</script>
